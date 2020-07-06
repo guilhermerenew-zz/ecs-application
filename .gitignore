@@ -1,0 +1,2 @@
+#Import aws-config
+./ecr_credencials.sh
