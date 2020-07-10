@@ -43,7 +43,7 @@ jobs:
     - terraform init
     - terraform plan
     - terraform validate
-    - terraform destroy -auto-approve
+    - terraform apply -auto-approve
 # Auto Merge caso status de pipeline seja success TDLR
     after_success: ./setup-pipeline-steps/merge.sh $USERNAME $PASSWORD
 
