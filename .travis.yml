@@ -5,7 +5,7 @@ install:
 # Script que carrega configuração de Variaveis AWS
 script:
   - echo "Inicando Build e Push para o ECR!"
-  - sh "./setup-building/ecr_credentials.sh"
+  - sh "./setup-pipeline-steps/ecr_credentials.sh"
 after_success:
 # Validacão versão do docker
   - docker --version
@@ -22,7 +22,7 @@ after_success:
 # Inicia uma vm type xenial instalando o pacote terraform.
 
 ---
- 
+
 dist: xenial
 language: bash
 before_install:
