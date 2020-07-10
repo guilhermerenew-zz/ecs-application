@@ -21,8 +21,6 @@ after_success:
   - aws ecr describe-images --repository-name guilhermerenew/python-app --region eu-west-3
 # Inicia uma vm type xenial instalando o pacote terraform.
 
----
-
 dist: xenial
 language: bash
 before_install:
