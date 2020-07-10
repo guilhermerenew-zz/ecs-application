@@ -5,7 +5,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 data "template_file" "py_app" {
-  template = file("./templates/ecs/python_app.json.tpl")
+  template = file("./setup-pipeline-steps/templates/ecs/python_app.json.tpl")
 
   vars = {
     app_image      = var.app_image
