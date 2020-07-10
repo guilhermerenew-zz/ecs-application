@@ -1,24 +1,24 @@
 services:
-- docker
+  - docker
 install:
-- echo "Iniciando Instalacão :)!"
+  - echo "Iniciando Instalacão :)!"
 # Script que carrega configuração de Variaveis AWS
 script:
-- echo "Inicando Build e Push para o ECR!"
-- sh "./setup-building/ecr_credentials.sh"
+  - echo "Inicando Build e Push para o ECR!"
+  - sh "./setup-building/ecr_credentials.sh"
 after_success:
 # Validacão versão do docker
-- docker --version
+  - docker --version
 # Depois de validação de versão, é instalado o pacote aws-cli
-- pip install --user awscli
+  - pip install --user awscli
 # Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
-- aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region eu-west-3
-- aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.eu-west-3.amazonaws.com
-- docker build -t guilhermerenew/python-app .
-- docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
-- docker push 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
+  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region eu-west-3
+  - aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.eu-west-3.amazonaws.com
+  - docker build -t guilhermerenew/python-app .
+  - docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
+  - docker push 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
 # Lista de imagens ativas em repositório!
-- aws ecr describe-images --repository-name guilhermerenew/python-app --region eu-west-3
+  - aws ecr describe-images --repository-name guilhermerenew/python-app --region eu-west-3
 # Variaveis de Ambiente AWS encriptografadas! 
 env:
   global:
