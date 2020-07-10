@@ -38,12 +38,12 @@ jobs:
     - terraform init -backend-config backend_config/dev.tfvars
     - terraform plan
 # Passo 2 - Terraform Apply
-  - stage: terraform apply deployment 
+  - stage: terraform destroy deployment 
     script:
     - terraform init
     - terraform plan
     - terraform validate
-    - terraform apply -auto-approve
+    - terraform destroy -auto-approve
 # Auto Merge caso status de pipeline seja success TDLR
     after_success: ./setup-pipeline-steps/merge.sh $USERNAME $PASSWORD
 
