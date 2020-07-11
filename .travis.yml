@@ -19,6 +19,7 @@ jobs:
     script:
     - terraform init
     - terraform plan
+    - terraform apply --auto-approve
 
 # Variaveis de Ambiente AWS encriptografadas! 
 env:
