@@ -1,3 +1,27 @@
+# Buildar imagem e enviar para Repositorio ECR
+services:
+  - docker
+install:
+  - echo "Iniciando Instalacão :)!"
+# Script que carrega configuração de Variaveis AWS
+script:
+  - echo "Inicando Build e Push para o ECR!"
+  - sh "./setup-pipeline-steps/ecr_credentials.sh"
+after_success:
+# Validacão versão do docker
+  - docker --version
+# Depois de validação de versão, é instalado o pacote aws-cli
+  - pip install --user awscli
+# Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
+  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region eu-west-3
+  - aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.eu-west-3.amazonaws.com
+  - docker build -t guilhermerenew/python-app .
+  - docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
+  - docker push 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
+# Lista de imagens ativas em repositório!
+  - aws ecr describe-images --repository-name guilhermerenew/python-app --region eu-west-3
+
+# Terraformando as coisa tudo...
 dist: xenial
 language: bash
 # Instalacao terraform package
@@ -21,10 +45,6 @@ jobs:
     - terraform plan
     - terraform validate
     - terraform apply -auto-approve
-# Auto Merge caso status de pipeline seja success TDLR
-after_install:
-  - chmod +x ./setup-pipeline-steps/merge.sh
-  - ./setup-pipeline-steps/merge.sh $USERNAME $PASSWORD
 # Variaveis de Ambiente AWS encriptografadas! 
 env:
   global:
@@ -34,4 +54,5 @@ env:
   - secure: IAYZ45y8RgDX52rS6buo/wqM+gDxekQcezPqv6nSmtEYdxaNucoZeMqiC+5E8Rky9fepaEWH4ALaIJOlN4PVeD2D2jyzbGGMQn2dauB3BAZP+JnCbg08T70uZqRzXTPPrPRPLJ6ChH774vhoPl01cg6jgbELpR5Bu1pQ/GBgc7e/fB42ucSQ1Cv2bMfx5bBnxlR1kY6soaI/uYEzOza54Q9g/t49aFRIMYSHI8x1EXVCLTt/D2PtKDL01HiQUJ2vBty0YjSZ1vn55x3s2jrzlh6O9vABHd/D1+3iGFBnEoRNsDHNPHS3FV+04TpKB5thECVj4SO9rbcnL9AF7MMmgbck41pU3jQPKcAWV6SjffO5kQksWlYCHK/5OB+JzMSXv9RF0GpDnDq/Cm12rZihYyiI41TZKrNzziHEZHzwcDj+PFcCZttGfjjgFMchOwCoDJJIDxwABtzU+v6jfcKkzAeC3D2xi+lJeKp+IK9bgphOkNLEgjX0OV8YENZLRKyQFu+vwc3cU2vAy2Wo1zo4EWZ3d+m4+RZOUUYq7ndMmsNNUtREMg6/qrYyaBvBcEFT7EoXLKoCkNzBwzmgFTLYn5bgG2rt8DKUBu0z11cNGgHbcIJvH3iNFP324O7K74naQ5xEG3GizwvnoAzrt6Uwqid2TmuY59CgAaIkWKAObd0=
 # Slack Webhook Notification 
 notifications:
-  slack: testing-webhookers:6tsCRhdSZknC8053HgXMAbNH
+  slack:
+    secure:  vFHg5Bhfvl7uNDIKBkxJI9y8w0CdWJkyUGylVEdL27JhXB5+lUbU76AWEZ2Tj84rhUp71wS/d9FC8yz/64Nght9M+ni1RgvtYoeXWd3LE3rt4g4A5pMym043xSS9FPorHOrlp+nje91AAZ9vlDnlLP4zFqnM/VO67snnWilzShZ6lcFDW9a5yk7glOAVC1tWJS4H+HyRcB8YLEXvf1FZMMbu/u1Bhc+xJFif949tfLhE2ANFOPG9Qg9UAu9MnyZAzqp6AM66mZCzmVajXf6o159i0fwjbSdmkuGA9YqxEt16JZQDl2nCJw+7bG15PLzjZpWKiA+kLHbUsEbs1LLc6BEfKTme/zFb540ZPkIIgILwBENk4ieRTOziLal+jd4y1RoW6O5IYWxGMa7D8U23SjE8NyTJ/2VpoBHUFVd5Ylb1W7MykGTMW4eBhnLMVhT26DXqOJXlmWY5SSTQLpGdyYcnPm8780Jl68mtYEUGHwbMpfWOfDmvA/1FR5C1/fm27BngSJ0lm8FZ6hSm6T7bGdLXnpHU3537i63CwlWWiyucnupYX1vdbnyFXWwRjcjG3K8icHD2WvpW729ZsgVM8jXYpO+8/JDJAg1WQRjoP0tKuQ6iHMlflcMs+vqtHyCBINVx/uyUWj/Cum3P07bNWgzdpbCtyhoFM94GdwOGKwM=
