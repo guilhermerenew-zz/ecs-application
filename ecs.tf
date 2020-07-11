@@ -5,7 +5,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 data "template_file" "py_app" {
-  template = file("./templates/ecs/python_app.json.tpl")
+  template = file("./setup-pipeline-steps/templates/ecs/python_app.json.tpl")
 
   vars = {
     app_image      = var.app_image
@@ -41,7 +41,7 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.app.id
-    container_name   = "application-py"
+    container_name   = "cb-app"
     container_port   = var.app_port
   }
 

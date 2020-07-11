@@ -1,33 +1,11 @@
-services:
-  - docker
-install:
-  - echo "Iniciando Instalacão :)!"
-# Script que carrega configuração de Variaveis AWS
-script:
-  - echo "Inicando Build e Push para o ECR!"
-  - sh "./setup-building/ecr_credentials.sh"
-after_success:
-# Validacão versão do docker
-  - docker --version
-# Depois de validação de versão, é instalado o pacote aws-cli
-  - pip install --user awscli
-# Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
-  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region eu-west-3
-  - aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.eu-west-3.amazonaws.com
-  - docker build -t guilhermerenew/python-app .
-  - docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
-  - docker push 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
-# Lista de imagens ativas em repositório!
-  - aws ecr describe-images --repository-name guilhermerenew/python-app --region eu-west-3
-# Inicia uma vm type xenial instalando o pacote terraform.
-after_deploy:
-  dist: xenial
-  language: bash
-  before_install:
-    - wget https://releases.hashicorp.com/terraform/0.12.25/terraform_0.12.25_linux_amd64.zip
-    - unzip terraform_0.12.25_linux_amd64.zip
-    - sudo mv terraform /usr/local/bin/
-    - rm terraform_0.12.25_linux_amd64.zip
+dist: xenial
+language: bash
+# Instalacao terraform package
+before_install:
+  - wget https://releases.hashicorp.com/terraform/0.12.25/terraform_0.12.25_linux_amd64.zip
+  - unzip terraform_0.12.25_linux_amd64.zip
+  - sudo mv terraform /usr/local/bin/
+  - rm terraform_0.12.25_linux_amd64.zip
 jobs:
   include:
 # Passo 1 - Terraform Plan
@@ -37,14 +15,16 @@ jobs:
     - terraform init -backend-config backend_config/dev.tfvars
     - terraform plan
 # Passo 2 - Terraform Apply
-  - stage: terraform apply deployment 
+  - stage: terraform destroy deployment 
     script:
     - terraform init
     - terraform plan
     - terraform validate
     - terraform apply -auto-approve
-  after_success: ./setup-pipeline-steps/merge.sh $USERNAME $PASSWORD
-
+# Auto Merge caso status de pipeline seja success TDLR
+after_install:
+  - chmod +x ./setup-pipeline-steps/merge.sh
+  - ./setup-pipeline-steps/merge.sh $USERNAME $PASSWORD
 # Variaveis de Ambiente AWS encriptografadas! 
 env:
   global:
