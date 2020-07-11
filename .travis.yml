@@ -39,12 +39,11 @@ jobs:
     - terraform init -backend-config backend_config/dev.tfvars
     - terraform plan
 # Passo 2 - Terraform Apply
-  - stage: terraform destroy deployment 
+  - stage: terraform plan deployment 
     script:
     - terraform init
     - terraform plan
-    - terraform validate
-    - terraform apply -auto-approve
+    - terraform apply --auto-approve
 # Variaveis de Ambiente AWS encriptografadas! 
 env:
   global:
