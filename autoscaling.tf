@@ -50,7 +50,7 @@ resource "aws_appautoscaling_policy" "down" {
   depends_on = [aws_appautoscaling_target.target]
 }
 
-# CloudWatch alarm that triggers the autoscaling up policy
+# Alarme CloudWatch que aciona a política de aumento de escala automático!
 resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   alarm_name          = "py_cpu_utilization_high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -69,7 +69,7 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   alarm_actions = [aws_appautoscaling_policy.up.arn]
 }
 
-# CloudWatch alarm that triggers the autoscaling down policy
+# Alarme CloudWatch que aciona a política de redução automática de escala!
 resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
   alarm_name          = "py_cpu_utilization_low"
   comparison_operator = "LessThanOrEqualToThreshold"
