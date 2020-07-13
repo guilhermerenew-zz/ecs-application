@@ -127,7 +127,7 @@ Os requisitos de entrega passavam por esses cinco checks que deveriam existir:
 Toda construcão desde o build de imagem docker ao escalonamento de containers ECS em provider AWS é escrito em terraform e esta publicado neste repositório, os templates utilizados, as configuracoes de auto-scaling e os resources definidos para a aplicacao. \
 Foram escitas técnicas de monitoracao a partir do auto-scaling criado, onde é aproveitado ao máximo a forma como lidamos com aplicacoes em nuvem. 
 
-### Vivências com novas tecnologias utilizadas
+### Aprendizados e Vivências com novas tecnologias utilizadas
 - [x] AWS foi escolhida como provider por maior convivência com plataforma. 
 - [x] Terraform tem a modularidade de execução em mais de 95% dos recursos em nuvem.
 - [x] TravisCI.
