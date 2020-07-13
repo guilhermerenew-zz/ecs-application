@@ -5,7 +5,7 @@ install:
   - echo "Iniciando Instalacão :)!"
 # Script que carrega configuração de Variaveis AWS
 script:
-  - echo "Inicando Build e Push para o ECR!"
+  - echo "Iniciando Docker Build e Push para o ECR!"
   - sh "./setup-pipeline-steps/ecr_credentials.sh"
 after_success:
 # Validacão versão do docker
@@ -21,6 +21,7 @@ after_success:
 # Lista de imagens ativas em repositório!
   - aws ecr describe-images --repository-name guilhermerenew/python-app --region eu-west-3
 
+after_deploy:
 # Terraformando as coisa tudo...
 dist: xenial
 language: bash
@@ -44,7 +45,7 @@ jobs:
     - terraform init
     - terraform plan
     - terraform apply --auto-approve
-# Variaveis de Ambiente AWS encriptografadas! 
+# Variaveis de Ambiente AWS encriptografadas! (deleted*)
 env:
   global:
   - secure: g50oDO0wyUT8/ZM8xwGWCQ6U2lKLwd4DQgtDTN7K/YkfM5UjgnXVLV4dMwKnHelGKXIVII2DqbN8ur7T+fHgdwwx4TyZ0K1Gg4JPRNe/jAz+8x2xZV2nHtofDtvE9K7M0vI+oeua8r152lXlq54BeB72eq5hwuDHUITeAQ+Y3YHIkX9jnDH7SzlAmPRbcH0nZm0fy+wrrTyjVdapweP/fJkeceSNC6apK6pDfs/xErFo4lzHkiC20hRzySkr1kIw6aY8KGg7B7DewRl7h7/hLbmoLTclTFEZffNckS3zQE4UNDVqdPnwkK8+C7R+b8I/j+IOdmcSgCB87b97ERQJ8LtP1QtWuaI5hcqjl04i0zCqx2A8ta4MhiVrLlBD9efafxgF6BZRkH/PEOJ0BsfhnuMohN79zrGPF7Z/r31LMgbZhbjzJP5KIuuGimabdZQgatD5PVEBIx+ENWKfQObQYA43qdHm0Law4HOM3/lD0/8+XNmgKx7fL+jKFzO15TqF3jPvi+g0kTwGDvfRhDBtXTKp19atJNjlp8gVZOPQ0S+E+bOXdZU+70xnSp2LxtR4Ma87/RWdqNeIfKfE1w0Vc7ct0Bb6G3Dab0FqhybgusYKOotdzvV+I9gACC7qiE9llixRT4sq2vpI1eqEPfNzmxgBmQ3DCRUZ0XefAmqWwws=
