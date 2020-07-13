@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# Script basico realiza a cricao de um diretorio aws para o agent do pipeline carregue corretamente as credenciais fornecidas em TravisCI. 
 mkdir -p ~/.aws
 cat > ~/.aws/credentials << EOL
 [default]
