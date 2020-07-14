@@ -1,5 +1,6 @@
 # Apresentação
-[![Build Status](https://travis-ci.com/guilherme-devops/app-devops.svg?token=WzRcxWWG8F7oHiAqJY3b&branch=master)](https://travis-ci.com/guilherme-devops/app-devops)
+[![Build Status](https://travis-ci.com/guilherme-devops/application-devops.svg?token=WzRcxWWG8F7oHiAqJY3b&branch=master)](https://travis-ci.com/guilherme-devops/application-devops)
+
 > Sinta-se à vontade para criar em cima do problema abaixo. Caso algo não esteja claro, pode assumir o que seja mais claro para você e indique suas suposições em documentação. A especificação é bem básica e, portanto, caso deseje evoluir a ideia seguindo essa base, fique à vontade: por exemplo, utilizar composição de containers, usar ferramentas para facilitar a geração da imagem do container, etc.
 
 ## Sobre
@@ -120,7 +121,7 @@ Os requisitos de entrega passavam por esses cinco checks que deveriam existir:
 
 - Componente: Todos os componentes passam por uma fase de implantacao dentro do pipeline criado, logo todas as informacões de mudancas devem ser persistidas em cada um destes pipelines. - Versão: Acompanha o componente com relacão a oque esta sendo alterado.
 - Responsavel: Tento todo um pipeline de entrega do código feito, as alteracoes ja acompanham o responsavel por aquela mudanca, onde é simples analisar os passos tomados. - Data: mudancas seguem uma cronologia de tempo de implantacao, tendo mapeado todos estas mudancas, a data se mantem pertinente.
-- Status: É necessário um status atual do código disponibilizado, com isso o status build esclare a seguranca do pipeline realizado e se esta apto a execucao. :student: [![Build Status](https://travis-ci.com/guilherme-devops/app-devops.svg?token=WzRcxWWG8F7oHiAqJY3b&branch=master)](https://travis-ci.com/guilherme-devops/app-devops)
+- Status: É necessário um status atual do código disponibilizado, com isso o status build esclare a seguranca do pipeline realizado e se esta apto a execucao. :student: [![Build Status](https://travis-ci.com/guilherme-devops/application-devops.svg?token=WzRcxWWG8F7oHiAqJY3b&branch=master)](https://travis-ci.com/guilherme-devops/application-devops)
 
 > **Vamos avaliar o código gerado, como sua aplicação será executada e como você preparou o ambiente para que ela possa executar. O último item é muito importante e terá um peso considerável na avaliação.**
 
