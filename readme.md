@@ -84,7 +84,7 @@ Funções dentro de .travis.yml realizam a criação de repositório privado, a 
 ## Running Application
 O Provisionamento de toda a Infraestrutura foi pensada em disponibilidade e escalabilidade que aplicação pode sofrer. Tento em consideração diversos métodos de provisionamento foi escolhido o Terraform por questão de ser multi-cloud, atender mais de 90% dos recursos AWS e GCP e pela maturidade que **time todo** alcança com a implantação por tal linguagem.
 
-## Arquivos .tf trazem cada um uma função, ou recurso dentro do provider escolhido:
+## Arquivos .tf traz uma função ou recurso dentro do provider escolhido:
 alb.tf              - Definição de LoadBalancer e Target Group. \
 autoscaling.tf     - Auto Escalonamento de containers ECS \
 ecs.tf              - Definições de container \
