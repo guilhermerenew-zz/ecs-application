@@ -2,7 +2,7 @@
 # Variavis de Ambiente!
 variable "aws_region" {
   description = "Regiao para criacao de infraestrutura, eu escolhi Paris..."
-  default     = "eu-west-3"
+  default     = "us-west-2"
 }
 
 variable "ecs_task_execution_role_name" {
@@ -18,7 +18,7 @@ variable "az_count" {
 # Configuracao de container ECS Fargate com imagem gerada! 
 variable "app_image" {
   description = "imagem docker utilizada pata execucao do container ECS"
-  default     = "417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest"
+  default     = "417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilherme-devops:20200723"
 }
 # Espose da porta 8000 do container para conexao
 variable "app_port" {
