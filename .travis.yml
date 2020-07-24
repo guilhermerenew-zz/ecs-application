@@ -15,10 +15,8 @@ before_install:
 - docker --version
 - terraform version
 - pip install --user awscli
-- aws ecr create-repository --repository-name guilherme-devops/python-app --image-tag-mutability
-  IMMUTABLE --region us-west-2
-- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin
-  417311404467.dkr.ecr.us-west-2.amazonaws.com
+- aws ecr create-repository --repository-name guilherme-devops/python-app --image-tag-mutability IMMUTABLE --region us-west-2
+- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
 - docker build -t guilherme-devops/python-app:20200722 .
 - docker tag guilherme-devops/python-app:20200722 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilherme-devops/python-app:20200722
 - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilherme-devops/python-app:20200722
