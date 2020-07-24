@@ -15,8 +15,10 @@ before_install:
 - docker --version
 - terraform version
 - pip install --user awscli
-- aws ecr create-repository --repository-name guilherme-devops/python-app --image-tag-mutability IMMUTABLE --region us-west-2
-- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
+- aws ecr create-repository --repository-name guilherme-devops/python-app --image-tag-mutability
+  IMMUTABLE --region us-west-2
+- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin
+  417311404467.dkr.ecr.us-west-2.amazonaws.com
 - docker build -t guilherme-devops/python-app:20200722 .
 - docker tag guilherme-devops/python-app:20200722 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilherme-devops/python-app:20200722
 - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilherme-devops/python-app:20200722
@@ -33,3 +35,7 @@ jobs:
 notifications:
   slack:
     secure: uiT0hNkT1whvPEqlViJ+UOSybqTmGjhv8dCEqLQ5/xj5tanLUgvZW/VR/sxUv/jylAUVLhWam4sP2+4EAnnU3jsHlXJUjrmU5GVhOr2IthXAN8IjzMMT0N8VQWR1BcTi3826P/YbST+2zmV1FsdlSve2aYk479FIM9lr8gKULkmHbkidXosxIHEPb5bY/vDOre7AdCkC4K5pg6LbtdwNGCj1pAxsvCVQkTB6Q+AlX1+xJrOwgJXwt85rQRZWNKVQm1EiGuFlsaInfD4ouNkh8hIMbajwjVQdmzVCeAPQfkDeg8zY0YmO22b4kAAP/heyl0/mzD0sG4pzlhDOX5iG6T4fakltX2NRQgQ/65p7940X9SoVXK9AhEp64u1ISMOD88HhCI7btTCMu+Ks7hE+ReJLWeWH84cszxEIJUSK7N5epUcRUIKQiAohk6rITYogM9yJen/7mu/xjDnN9/DN2OEDM+gvKPLEt+PyQ0oAblfg2Q3DdTAu/mzd9SILIoi+1EIq7kvo1uTbjW8DotJcrOtrFQOA/nvXaWXRe6ZFt9nckJCfMmcNjpzm/V6PLriIZBP6VpQzcTO53cgVXKAuZBlsNjq/GXImWQal/uLRhTRopwCViQyUxvvV4fsTDoUaKioOaZHboW9UyxW131TNpKU/pfF6fIYK1CMiz/S5HzY=
+env:
+  global:
+  - secure: YRdwn4NWcGqnhkr1BOHhsjxob16v7AuuBUfC4nV7cTVYv6dNoY3QT2g0K506Nsp8HVBgG8k5omxzas7SuAOP/JPQenzAS5SPtHw0PkBVEJYFov0gEL4MiBqkCBcjLlab8lSeYIzOy7CHuQNKZvgvio88pPZcytCnCCLekHCITB6wpzkk8Ws4Ms5MniT5ROMtJ0GTpOALWPp3mZGGQEuqD4KPo1aqNco42K2wPm7BIu17JuHNzMtpuG0x9KXT8KAyN61SzI+WmKc/rSUioBfzQmk//Bg+/xngEUAeMOCXDANbUvZosAJsLcn4nL77zTfPDOzJhfvXaiEQMwgFS34VwGKD5NKCR6XJdqEVNfIXtFCp2vhIAgdaXvG/9N5eljcB2kDn/W8whjrsH/lNL3ClnSUImYBqlvhQ+Ve49N804vadznyAYMi9Xkm37uNdOoj6l4dxpgYED8U5NomAlYaYKQciRdCQN11QvHO1gzTda2r5f+Mjw8q2aFSq/5GwH+8xXP3QAXAc1gby1WhJCy7j7fij7ukMH2SBSqQhAPnoacj7IYO/60nlrggeWW6kxG+F/G6PrpF5EJs5m7tpamxkhye6iaq/bPNO9Xr1z+rp3NAZYo8vhVnrF5c8jBzdIZtMeZd7T3DnD4asQtW7G0TBCXx1NSJCKRsun+xl11IDhvI=
+  - secure: ow4nMHowT1sBJLdOR/fjlzGyFeT9jFMZPuDprEjJU9630eoLFaHEU1Bb0iwzZHWPzK3qaPqsTQa9b9LID+OlJzr5R2+b+0jKb0zNWz6bblIIehsIuVsQnbBwxoAECm6r/6QyOItPjdbbKaSgl/XWjigLM2l8g/7evnab6Ix+n336PJoVCMMySGatnP720xaGfyv/ps7pJfLjhqtAUpZg+dQ7P1H+OP+Gv6mD5xPvHW/o2NtdBJCO2RGG0VzsEhQ12MTOYIJB6tKNH9Z3lj/mglrk7ouBuQxDJRwVmmxYBmh16RYKt925+7f3e+iipO5vQ+x6zvRigtatNyDJdHSOa4fwW+X9NQD2YONMa2v6eKyfM8hw2T6s9YtaJIr2pTwxqOvRcvcQf4M4B2kfx1Fv4Vlfx35mabm33q6HuFnObgfe7pIa48kAeiKZn0JuVuX7uCoPrNNOfi998asJU2aJNHFBj64MZ6jROs2jtHqG5OKo+JqGuFldu8LCPzkqih+FgkX0Mv58negdGV03MHs5mLccsr83mwLdXMaJOu/IOHETWH2EUS5QRJdy1i2N8Eies/Mx/x2cWd+95YEND35fBKXWQ34vOsQolQ7nclyU65xxKg2WN2YRX2YmOTgA8Z2WaTWzvBmzVt6TfDjo3H/yZKcUw9ni25hB+OlXEvqIxcQ=
