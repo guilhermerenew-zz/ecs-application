@@ -1,35 +1,25 @@
-dist: xenial
-language: bash
-before_install:
-- sudo apt-get update
-- sudo apt-get install apt-transport-https ca-certificates
-- sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-- sudo apt-get update
-- sudo apt-get install -y docker-ce
-- wget https://releases.hashicorp.com/terraform/0.12.25/terraform_0.12.25_linux_amd64.zip
-- unzip terraform_0.12.25_linux_amd64.zip
-- sudo mv terraform /usr/local/bin/
-- rm terraform_0.12.25_linux_amd64.zip
-- echo "Inicando Build e Push para o ECR!"
-- sh "./setup-pipeline-steps/ecr_credentials.sh"
-- docker --version
-- terraform version
-- pip install --user awscli
-- aws ecr create-repository --repository-name guilherme-devops/python-app --image-tag-mutability IMMUTABLE --region us-west-2
-- aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
-- docker build -t guilherme-devops/python-app:20200722 .
-- docker tag guilherme-devops/python-app:20200722 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilherme-devops/python-app:20200722
-- docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilherme-devops/python-app:20200722
-- aws ecr describe-images --repository-name guilherme-devops/python-app --region us-west-2
-jobs:
-  include:
-  - stage: terraform plan deployment
-    script:
-    - terraform init
-    - terraform plan
-  - stage: terraform deploy
-    script:
-    - terraform apply -auto-approve
+services:
+  - docker
+install:
+  - echo "Iniciando Instalacão :)!"
+# Script que carrega configuração de Variaveis AWS
+script:
+  - echo "Inicando Build e Push para o ECR!"
+  - sh "./setup-pipeline-steps/ecr_credentials.sh"
+after_success:
+# Validacão versão do docker
+  - docker --version
+# Depois de validação de versão, é instalado o pacote aws-cli
+  - pip install --user awscli
+# Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
+  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region eu-west-3
+  - aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.eu-west-3.amazonaws.com
+  - docker build -t guilhermerenew/python-app .
+  - docker tag guilhermerenew/python-app:latest 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
+  - docker push 417311404467.dkr.ecr.eu-west-3.amazonaws.com/guilhermerenew/python-app:latest
+# Lista de imagens ativas em repositório!
+  - aws ecr describe-images --repository-name guilhermerenew/python-app --region eu-west-3
+  # Variaveis de Ambiente AWS encriptografadas! 
 notifications:
   slack:
     secure: uiT0hNkT1whvPEqlViJ+UOSybqTmGjhv8dCEqLQ5/xj5tanLUgvZW/VR/sxUv/jylAUVLhWam4sP2+4EAnnU3jsHlXJUjrmU5GVhOr2IthXAN8IjzMMT0N8VQWR1BcTi3826P/YbST+2zmV1FsdlSve2aYk479FIM9lr8gKULkmHbkidXosxIHEPb5bY/vDOre7AdCkC4K5pg6LbtdwNGCj1pAxsvCVQkTB6Q+AlX1+xJrOwgJXwt85rQRZWNKVQm1EiGuFlsaInfD4ouNkh8hIMbajwjVQdmzVCeAPQfkDeg8zY0YmO22b4kAAP/heyl0/mzD0sG4pzlhDOX5iG6T4fakltX2NRQgQ/65p7940X9SoVXK9AhEp64u1ISMOD88HhCI7btTCMu+Ks7hE+ReJLWeWH84cszxEIJUSK7N5epUcRUIKQiAohk6rITYogM9yJen/7mu/xjDnN9/DN2OEDM+gvKPLEt+PyQ0oAblfg2Q3DdTAu/mzd9SILIoi+1EIq7kvo1uTbjW8DotJcrOtrFQOA/nvXaWXRe6ZFt9nckJCfMmcNjpzm/V6PLriIZBP6VpQzcTO53cgVXKAuZBlsNjq/GXImWQal/uLRhTRopwCViQyUxvvV4fsTDoUaKioOaZHboW9UyxW131TNpKU/pfF6fIYK1CMiz/S5HzY=
