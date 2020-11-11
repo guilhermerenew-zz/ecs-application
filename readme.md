@@ -1,4 +1,5 @@
 # Apresentação
+[![Build Status](https://travis-ci.com/guilhermerenew/application-devops.svg?branch=master)](https://travis-ci.com/guilhermerenew/application-devops)
 > Sinta-se à vontade para criar em cima do problema abaixo. Caso algo não esteja claro, pode assumir o que seja mais claro para você e indique suas suposições em documentação. A especificação é bem básica e, portanto, caso deseje evoluir a ideia seguindo essa base, fique à vontade: por exemplo, utilizar composição de containers, usar ferramentas para facilitar a geração da imagem do container, etc.
 
 ## Sobre
@@ -118,7 +119,7 @@ Os requisitos de entrega passavam por esses cinco checks que deveriam existir:
 
 - [x] Componente: Todos os componentes passam por uma fase de implantacao dentro do pipeline criado, logo todas as informacões de mudancas devem ser persistidas em cada um destes pipelines. - Versão: Acompanha o componente com relacão a oque esta sendo alterado.
 - [x] Responsavel: Tento todo um pipeline de entrega do código feito, as alteracoes ja acompanham o responsavel por aquela mudanca, onde é simples analisar os passos tomados. - Data: mudancas seguem uma cronologia de tempo de implantacao, tendo mapeado todos estas mudancas, a data se mantem pertinente.
-- [x] Status: É necessário um status atual do código disponibilizado, com isso o status build esclare a seguranca do pipeline realizado e se esta apto a execucao. :student:
+- [x] Status: É necessário um status atual do código disponibilizado, com isso o status build esclare a seguranca do pipeline realizado e se esta apto a execucao. :partying_face::dizzy:[![Build Status](https://travis-ci.com/guilhermerenew/application-devops.svg?branch=master)](https://travis-ci.com/guilhermerenew/application-devops)
 
 Toda construcão desde o build de imagem docker ao escalonamento de containers ECS em provider AWS é escrito em terraform e esta publicado neste repositório, os templates utilizados, as configuracoes de auto-scaling e os resources definidos para a aplicacao. Foram escitas técnicas de monitoracao a partir do auto-scaling criado, onde é aproveitado ao máximo a forma como lidamos com aplicacoes em nuvem. 
 
