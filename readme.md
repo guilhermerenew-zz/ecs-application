@@ -110,18 +110,15 @@ TravisCI traz informacoes muito mais conclusivas sobre a saude dos commits reali
 
 ![picture](./imagens/integration-ci.png)
 
-# Sobre (Teste Engenheiro de Software/DevOps Elo7)
 ## Itens que devem ser persistentes
 <img src="./imagens/checkings.png" align="right" width="250" height="auto">
 Os pontos lincados em teste apontavam a criacao de uma API onde eu contesse toda essas informacoes de forma acessiveis e de facil entendimento do time atuante. 
 Busquei algo que fosse integrado ao desenvolvimento de código como um todo, sem ser algo apartado. Acredito que uma feita a parte desviaria totalmente o foco no desenvolvimento dos produtos e integrar esses requisitos dentro do seu padrào de desenvolvimento de traz muito mais altonomia e evolucao como plataforma.
 Os requisitos de entrega passavam por esses cinco checks que deveriam existir:
 
-- Componente: Todos os componentes passam por uma fase de implantacao dentro do pipeline criado, logo todas as informacões de mudancas devem ser persistidas em cada um destes pipelines. - Versão: Acompanha o componente com relacão a oque esta sendo alterado.
-- Responsavel: Tento todo um pipeline de entrega do código feito, as alteracoes ja acompanham o responsavel por aquela mudanca, onde é simples analisar os passos tomados. - Data: mudancas seguem uma cronologia de tempo de implantacao, tendo mapeado todos estas mudancas, a data se mantem pertinente.
-- Status: É necessário um status atual do código disponibilizado, com isso o status build esclare a seguranca do pipeline realizado e se esta apto a execucao. :student:
-
-> **Vamos avaliar o código gerado, como sua aplicação será executada e como você preparou o ambiente para que ela possa executar. O último item é muito importante e terá um peso considerável na avaliação.**
+- [x] Componente: Todos os componentes passam por uma fase de implantacao dentro do pipeline criado, logo todas as informacões de mudancas devem ser persistidas em cada um destes pipelines. - Versão: Acompanha o componente com relacão a oque esta sendo alterado.
+- [x] Responsavel: Tento todo um pipeline de entrega do código feito, as alteracoes ja acompanham o responsavel por aquela mudanca, onde é simples analisar os passos tomados. - Data: mudancas seguem uma cronologia de tempo de implantacao, tendo mapeado todos estas mudancas, a data se mantem pertinente.
+- [x] Status: É necessário um status atual do código disponibilizado, com isso o status build esclare a seguranca do pipeline realizado e se esta apto a execucao. :student:
 
 Toda construcão desde o build de imagem docker ao escalonamento de containers ECS em provider AWS é escrito em terraform e esta publicado neste repositório, os templates utilizados, as configuracoes de auto-scaling e os resources definidos para a aplicacao. Foram escitas técnicas de monitoracao a partir do auto-scaling criado, onde é aproveitado ao máximo a forma como lidamos com aplicacoes em nuvem. 
 
