@@ -1,11 +1,11 @@
-# alb.tf
-# Criacao de App LoadBalancer com Porta 80 como alvo
+# Application Load Balancer
 resource "aws_alb" "main" {
   name            = "app-load-balancer"
   subnets         = aws_subnet.public.*.id
   security_groups = [aws_security_group.lb.id]
 }
 
+# Target Group Online
 resource "aws_alb_target_group" "app" {
   name        = "cb-target-group"
   port        = 80
@@ -14,20 +14,20 @@ resource "aws_alb_target_group" "app" {
   target_type = "ip"
 
   health_check {
-    healthy_threshold   = "3"
-    interval            = "30"
+    healthy_threshold   = 3
+    interval            = 30
     protocol            = "HTTP"
-    matcher             = "200"
-    timeout             = "3"
-    path                = var.health_check_path
-    unhealthy_threshold = "2"
+    matcher             = 200
+    timeout             = 3
+    path                = "/"
+    unhealthy_threshold = 2
   }
 }
 
-# Redirect para listern front-end
+# Redirect all traffic from the ALB to the target group
 resource "aws_alb_listener" "front_end" {
   load_balancer_arn = aws_alb.main.id
-  port              = var.app_port
+  port              = 8000
   protocol          = "HTTP"
 
   default_action {
@@ -36,3 +36,6 @@ resource "aws_alb_listener" "front_end" {
   }
 }
 
+output "alb_hostname" {
+  value = aws_alb.main.dns_name
+}
