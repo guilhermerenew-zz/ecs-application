@@ -1,58 +1,53 @@
-# network.tf
-
-# Search em AZ disponivel! 
-data "aws_availability_zones" "available" {
-}
-
+# Creating Main vpc
 resource "aws_vpc" "main" {
   cidr_block = "172.17.0.0/16"
 }
 
-# Criacao de sub-redes privada e publica, cada uma em az diferente! 
-# subnet 1
+# Create var.az_count private subnets, each in a different AZ
 resource "aws_subnet" "private" {
-  count             = var.az_count
+  count             = 2
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+# availability_zone = data.aws_availability_zones.available.names[count.index]
   vpc_id            = aws_vpc.main.id
 }
-# subnet 2
+
+# Create var.az_count public subnets, each in a different AZ
 resource "aws_subnet" "public" {
-  count                   = var.az_count
-  cidr_block              = cidrsubnet(aws_vpc.main.cidr_block, 8, var.az_count + count.index)
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  count                   = 2
+  cidr_block              = cidrsubnet(aws_vpc.main.cidr_block, 8, 2 + count.index)
+# availability_zone       = data.aws_availability_zones.available.names[count.index]
   vpc_id                  = aws_vpc.main.id
   map_public_ip_on_launch = true
 }
 
-# Criacao de um Internet Gateway para acesso publico
+# Internet Gateway for the public subnet
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 }
 
-# Roteamento de Trafego de subnet publica pelo Internet Gateway
+# Route the public subnet traffic through the IGW
 resource "aws_route" "internet_access" {
   route_table_id         = aws_vpc.main.main_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.gw.id
 }
 
-# Crie um gateway NAT com um IP elástico para cada sub-rede privada para obter conectividade com a Internet
+# Create a NAT gateway with an Elastic IP for each private subnet to get internet connectivity
 resource "aws_eip" "gw" {
-  count      = var.az_count
+  count      = 2
   vpc        = true
   depends_on = [aws_internet_gateway.gw]
 }
 
 resource "aws_nat_gateway" "gw" {
-  count         = var.az_count
+  count         = 2
   subnet_id     = element(aws_subnet.public.*.id, count.index)
   allocation_id = element(aws_eip.gw.*.id, count.index)
 }
 
-# Crie uma nova tabela de rotas para as sub-redes privadas, faça com que ela direcione o tráfego não local através do gateway NAT para a Internet
+# Create a new route table for the private subnets, make it route non-local traffic through the NAT gateway to the internet
 resource "aws_route_table" "private" {
-  count  = var.az_count
+  count  = 2
   vpc_id = aws_vpc.main.id
 
   route {
@@ -61,10 +56,9 @@ resource "aws_route_table" "private" {
   }
 }
 
-# Associe explicitamente as tabelas de rotas recém-criadas às sub-redes privadas (para que não sejam padronizadas na tabela de rotas principal)
+# Explicitly associate the newly created route tables to the private subnets (so they don't default to the main route table)
 resource "aws_route_table_association" "private" {
-  count          = var.az_count
+  count          = 2
   subnet_id      = element(aws_subnet.private.*.id, count.index)
   route_table_id = element(aws_route_table.private.*.id, count.index)
 }
-
