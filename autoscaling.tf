@@ -1,5 +1,4 @@
-# auto_scaling.tf
-# Arquivo autoscaling realiza o escalonamento a partir de comportamento de utilizacao dos containers ECS.
+# Creating App Autoscaling Targets
 resource "aws_appautoscaling_target" "target" {
   service_namespace  = "ecs"
   resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
@@ -8,7 +7,7 @@ resource "aws_appautoscaling_target" "target" {
   max_capacity       = 6
 }
 
-# Escalonamento de de Capacidade (+1)
+# Automatically scale capacity up by one
 resource "aws_appautoscaling_policy" "up" {
   name               = "py_scale_up"
   service_namespace  = "ecs"
@@ -29,7 +28,7 @@ resource "aws_appautoscaling_policy" "up" {
   depends_on = [aws_appautoscaling_target.target]
 }
 
-# Escalonamento de de Capacidade (-1)
+# Automatically scale capacity down by one
 resource "aws_appautoscaling_policy" "down" {
   name               = "py_scale_down"
   service_namespace  = "ecs"
@@ -50,7 +49,7 @@ resource "aws_appautoscaling_policy" "down" {
   depends_on = [aws_appautoscaling_target.target]
 }
 
-# Alarme CloudWatch que aciona a política de aumento de escala automático!
+# CloudWatch alarm that triggers the autoscaling up policy
 resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   alarm_name          = "py_cpu_utilization_high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -69,7 +68,7 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   alarm_actions = [aws_appautoscaling_policy.up.arn]
 }
 
-# Alarme CloudWatch que aciona a política de redução automática de escala!
+# CloudWatch alarm that triggers the autoscaling down policy
 resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
   alarm_name          = "py_cpu_utilization_low"
   comparison_operator = "LessThanOrEqualToThreshold"

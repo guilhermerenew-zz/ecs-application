@@ -1,7 +1,5 @@
-# Arquivo especifica o provider utilizado e atribui as
-# variaveis de acesso as credenciais aws! 
+# Cloud Provider Access
 provider "aws" {
-  shared_credentials_file = "$HOME/.aws/credentials"
-  profile                 = "default"
-  region                  = var.aws_region
+  profile = "default"
+  region  = "us-west-2"
 }

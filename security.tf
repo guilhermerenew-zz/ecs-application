@@ -1,5 +1,6 @@
 # security.tf
-# ALB Security Group: edite para restringir o acesso ao aplicativo
+
+# ALB Security Group: Edit to restrict access to the application
 resource "aws_security_group" "lb" {
   name        = "app-load-balancer-security-group"
   description = "controls access to the ALB"
@@ -7,8 +8,8 @@ resource "aws_security_group" "lb" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = var.app_port
-    to_port     = var.app_port
+    from_port   = 8000
+    to_port     = 8000
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -20,7 +21,7 @@ resource "aws_security_group" "lb" {
   }
 }
 
-# O tráfego para o cluster do ECS deve vir apenas do Loadbalancer
+# Traffic to the ECS cluster should only come from the ALB
 resource "aws_security_group" "ecs_tasks" {
   name        = "app-ecs-tasks-security-group"
   description = "allow inbound access from the ALB only"
@@ -28,8 +29,8 @@ resource "aws_security_group" "ecs_tasks" {
 
   ingress {
     protocol        = "tcp"
-    from_port       = var.app_port
-    to_port         = var.app_port
+    from_port       = 8000
+    to_port         = 8000
     security_groups = [aws_security_group.lb.id]
   }
 

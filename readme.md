@@ -84,17 +84,19 @@ Funções dentro de .travis.yml realizam a criação de repositório privado, a 
 O Provisionamento de toda a Infraestrutura foi pensada em disponibilidade e escalabilidade que aplicação pode sofrer. Tento em consideração diversos métodos de provisionamento foi escolhido o Terraform por questão de ser multi-cloud, atender mais de 90% dos recursos AWS e GCP e pela maturidade que **time todo** alcança com a implantação por tal linguagem.
 
 ## Arquivos .tf traz uma função ou recurso dentro do provider escolhido:
-alb.tf              - Definição de LoadBalancer e Target Group. \
-autoscaling.tf     - Auto Escalonamento de containers ECS \
-ecs.tf              - Definições de container \
-logs.tf             - Métricas CloudWatch! \
-network.tf          - Definições de subnet priv/pub \
-outputs.tf          - Assim que finalizamos o nosso deployment é retornado o DNS publico para acesso! \
-provider.tf         - Qual Provider iremos provisionar os recursos descritos \
-roles.tf            - Politicas de IAM \
-security.tf         - Security Groups que definimos ter acesso a aplicação \
-versions.tf         - variavel de versão do terraform \
-variables.tf        - Definições de variaveis Globais
+| Terraform resource 	| About                                                                           	|
+|--------------------	|---------------------------------------------------------------------------------	|
+| autoscaling.tf     	| Auto Escalonamento de containers ECS                                            	|
+| ecs.tf             	| Definições de container                                                         	|
+| logs.tf            	| Métricas CloudWatch!                                                            	|
+| network.tf         	| Definições de subnet priv/pub                                                   	|
+| outputs.tf         	| Assim que finalizamos o nosso deployment é retornado o DNS publico para acesso! 	|
+| provider.tf        	| Qual Provider iremos provisionar os recursos descritos                          	|
+| roles.tf           	| Politicas de IAM                                                                	|
+| security.tf        	| Security Groups que definimos ter acesso a aplicação                            	|
+| versions.tf        	| variavel de versão do terraform                                                 	|
+| variables.tf       	| Definições de variaveis Globais                                                 	|
+| alb.tf             	| Definição de LoadBalancer e Target Group                                        	|
 
 ## Diagrama de Aplicacao Amazon ECS fargate
 ![picture](./imagens/diagram-ecs.png)
