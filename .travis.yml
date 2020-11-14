@@ -1,34 +1,30 @@
-# Terraformando as coisa tudo...
-dist: xenial
-language: bash
-# Instalacao terraform package
-before_install:
-  - wget https://releases.hashicorp.com/terraform/0.12.25/terraform_0.12.25_linux_amd64.zip
-  - unzip terraform_0.12.25_linux_amd64.zip
-  - sudo mv terraform /usr/local/bin/
-  - rm terraform_0.12.25_linux_amd64.zip
-jobs:
-  include:
-# Passo 1 - Terraform Plan
-  - stage: terraform plan deployment
-    if: type IN (pull_request)
-    script:
-    - terraform init -backend-config backend_config/dev.tfvars
-    - terraform plan
-# Passo 2 - Terraform Apply
-  - stage: terraform plan deployment 
-    script:
-    - terraform init
-    - terraform plan
-    - terraform apply --auto-approve
-# Variaveis de Ambiente AWS encriptografadas! (deleted*)
+services:
+  - docker
+install:
+  - echo "Iniciando Instalacão :)!"
+# Script que carrega configuração de Variaveis AWS
+script:
+  - echo "Inicando Build e Push para o ECR!"
+  - sh "./setup-pipeline-steps/ecr_credentials.sh"
+after_success:
+# Validacão versão do docker
+  - docker --version
+# Depois de validação de versão, é instalado o pacote aws-cli
+  - pip install --user awscli
+# Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
+  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region us-west-2
+  - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
+  - docker build -t guilhermerenew/python-app .
+  - docker tag guilhermerenew/python-app:20201114 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:20201114
+  - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:20201114
+# Lista de imagens ativas em repositório!
+  - aws ecr describe-images --repository-name guilhermerenew/python-app --region us-west-2
+# Variaveis de Ambiente AWS encriptografadas!
 env:
   global:
-  - secure: g50oDO0wyUT8/ZM8xwGWCQ6U2lKLwd4DQgtDTN7K/YkfM5UjgnXVLV4dMwKnHelGKXIVII2DqbN8ur7T+fHgdwwx4TyZ0K1Gg4JPRNe/jAz+8x2xZV2nHtofDtvE9K7M0vI+oeua8r152lXlq54BeB72eq5hwuDHUITeAQ+Y3YHIkX9jnDH7SzlAmPRbcH0nZm0fy+wrrTyjVdapweP/fJkeceSNC6apK6pDfs/xErFo4lzHkiC20hRzySkr1kIw6aY8KGg7B7DewRl7h7/hLbmoLTclTFEZffNckS3zQE4UNDVqdPnwkK8+C7R+b8I/j+IOdmcSgCB87b97ERQJ8LtP1QtWuaI5hcqjl04i0zCqx2A8ta4MhiVrLlBD9efafxgF6BZRkH/PEOJ0BsfhnuMohN79zrGPF7Z/r31LMgbZhbjzJP5KIuuGimabdZQgatD5PVEBIx+ENWKfQObQYA43qdHm0Law4HOM3/lD0/8+XNmgKx7fL+jKFzO15TqF3jPvi+g0kTwGDvfRhDBtXTKp19atJNjlp8gVZOPQ0S+E+bOXdZU+70xnSp2LxtR4Ma87/RWdqNeIfKfE1w0Vc7ct0Bb6G3Dab0FqhybgusYKOotdzvV+I9gACC7qiE9llixRT4sq2vpI1eqEPfNzmxgBmQ3DCRUZ0XefAmqWwws=
-  - secure: EVPA9PSMCEyZSt6z4XYcmLC+2bEYJeL6/aFCzjtdX2vUrClozNScA6bMlhcXQfy7w7Wu27Tuo0tAYvsYRdz5BGoClkZyD6L+k3s/LJWPFe96ePuLubQk3qSLEk4GV2Zt7+qvlVxhE1nw7by94J8ceOdbV4DHYuX2dc0Y+Os9mRs4d96dkfVvIo4E4UZSvlT5lEyGGTKfMMxxqxupqjTFryq2GZTGBZZ0Z4M/ta7bQaeE8bmF4jpzGe49wSrEra2+icd0aDqrHwDhZ+Xn8C70dGNNI5WcF6bWuUG8up8ZS2VuqkrKBCnM2feA8Q+FYixLZJzGbVftnogIdsblY9Jk1HJDIU3VvdVCeBNhdNLaWTkR+I8SUQx3w1zs1C88nRKiXyXoAj3nos82xhvvpU6m+GQ3P8foxvyYd5gycG+7N1xFBDgm8wMaMc0YtbIgWeVpg0QOWPUzC/ARNdluJHf9X2JHRDS32HF0CP9BRkO9et3QPHEfe8aqoYFeRh+H89GnHmU4bG+iyL/Ec/O7OMJfIaUkUAeLZsOLjX6x7tMjh/ZzdNDxYNv/ox006ZG74aUmqCU4drrroTExriUK2w2jwuJCIzGCH6fkHPUac99zoBhEUUdDlEtLBxJ8o4N3wFxSL9UUEtiqtXAx2uqjRcFfxiUegEVidBOp0rW7LYwSvPE=
-  - secure: V0QqNe2UmDxJx2E1S3PozFR+WgOdYQ2HwUWLsUgQYnV0EcwBkMeqfzAvZuf384KRVMAvX57jE/csBAfgB9ce3UpwspeOpzAXJz89RifRASJzJfTwt7wPg0yReuOCTW/5IotcVoyYPOMxyQ5lC1L1EWsYBkVDD1vs7SJtrZgkO+KGzFNsATR2E0r3H2IH3TZu91j4tW4oVlmEMdXxl6nO7UHQjo6xKZjAg6j4YO44f0dfGyoNOka/YJyhYTBUDgabyToHi69dhBMUSKDKG9BB4WW4K8NZYXgFPLDye8rtr8m+HrvQivWytH5lOK7OEQ/s276gGUf8hhzSijQQpFPKGA77KQPNk0cWQQc3Tsdggtf7le1U1XT1apX3cah2r3Yadqm+X4/8N0M6NqEUGa7o8L/h0oYGiaEU98GAg1A8gAV4X3+JMLXWOQjBJ1FUHd6EgaM5lJExS4a4akVqUO2Cl5Tg3DZ+MkVvTU3+kJ8j4X3z5EQ3pKRsIe4VLnjK0fE2jbpSWZtxnrKOjV/4XTL+BZbGWY/8PkgohcHUOCsFDS3aLYb9f/Jh039Vwp1srsh2Xs+CpylWRu91ZejT3RVU63zWOHAlKdu2RdObfu08H96J5/Y5aaOlm5LWTamDcxG/GTg9eEwuGYk8D0cvcRcrjCQmbYeOUXbNmCP49OSI8DM=
-  - secure: IAYZ45y8RgDX52rS6buo/wqM+gDxekQcezPqv6nSmtEYdxaNucoZeMqiC+5E8Rky9fepaEWH4ALaIJOlN4PVeD2D2jyzbGGMQn2dauB3BAZP+JnCbg08T70uZqRzXTPPrPRPLJ6ChH774vhoPl01cg6jgbELpR5Bu1pQ/GBgc7e/fB42ucSQ1Cv2bMfx5bBnxlR1kY6soaI/uYEzOza54Q9g/t49aFRIMYSHI8x1EXVCLTt/D2PtKDL01HiQUJ2vBty0YjSZ1vn55x3s2jrzlh6O9vABHd/D1+3iGFBnEoRNsDHNPHS3FV+04TpKB5thECVj4SO9rbcnL9AF7MMmgbck41pU3jQPKcAWV6SjffO5kQksWlYCHK/5OB+JzMSXv9RF0GpDnDq/Cm12rZihYyiI41TZKrNzziHEZHzwcDj+PFcCZttGfjjgFMchOwCoDJJIDxwABtzU+v6jfcKkzAeC3D2xi+lJeKp+IK9bgphOkNLEgjX0OV8YENZLRKyQFu+vwc3cU2vAy2Wo1zo4EWZ3d+m4+RZOUUYq7ndMmsNNUtREMg6/qrYyaBvBcEFT7EoXLKoCkNzBwzmgFTLYn5bgG2rt8DKUBu0z11cNGgHbcIJvH3iNFP324O7K74naQ5xEG3GizwvnoAzrt6Uwqid2TmuY59CgAaIkWKAObd0=
+  - secure: uM4jzQAlRIhzARShgbs+nelIQIdX+64M9TbY4jzkPgeAAlW/O/4bKB2z2Wtf4BP+xiFe2wnjB9peacYMrMQNdaT9vvmUkk1yj9PiZ+7YrDzFa0tPPqoS5hj8evnRB8PNnPRFyETAN4vZnGnJlCKzQxlmugbWGPlLQlsal9AiKhJHiTye6nFCB0/jQdVSOwIxE0Rf+gStbB1XDQglJ/u4Qh9fcz7z15fi1/yebPWjOSpVT4Tx7T4rJNqk0sBByC1YJr6yunPFY4NdKOnTw0vgjy0cv2UOobzkOisn/Fgx0CVHAN/ZYRxPLl1IWPyXh3GkH26ALbH9gj0tuNkncGBGoWI/n5eIGXk7zH+PIXde6P7ODwPOIooHNzz4C+K9xr+oSpJhELyeW6N4VCf435XJ2aixosOxBUElgUumgK25NJhg4lbL59LboK8DcOH96YmMuAs1Chrt+DOqGp4Fpq//LAdDPWQSGgzwhuKZJOREQobP5tmk3U+P8MjPrnYt7aKwwav5tQoz8FNB2FeQjhwWkqdp79AYc8X9f0CbSOJOmTnEumL3aJlh6CyltKCro5pNxCqpNyhi4f06nQo/8mEPtDgemUglW06QUTXwoSv4+j7cl9pfiJjnAy4uCsAQNQS+DPrkJDZyap8oCWNfkSHZYVlpcU/oqPrmYGfGIBrgiCg=
+  - secure: VhjgMWIxlOWyaqkwOvpzRNRKF1wl7Zk2frqLmwTOtZG9TBQ+Xll8UiXB1nG9F1w1q+TkzDzx2PJS9E/ugoMZnLItPzRda0jQtH0D3Mmm1/nAcatnL8Znja5AVT6ipVPpLKyejmOuIktouYmplFC84lpdJOXtKIU/xj5vEL0g3Y+7GPBwSOXrBRrZ9ILBu3a4AhIMOBEKd4Oe1c94inmna2NdiBJZmGol/o4U9FstvcMLJZaK0VFWWdQGaMtTF+MXruN7C0kQefK7b91lOofh0pr9U1kVvt2iNOZq9aCWS0WDZb5YCYsWPH++BmrfbvIENxeRPW0UNTSmpjvhLlw1Pb06bVWXiZ630fOQNuCAXzKX3Bm/KF3M3AqfeCDXy6+BRS+HphIl9i89CdmrYwqkdN+BOBAgFD2SiASdu+dJnYk0iXnydYs2/oTewBfRpaYbIwIgmYW5hVehPF6ssBHHDDuxPIKlT22C4/pOyYfFNj5A3aDukdNcGvFiQzvAYESey9w4De5mOyNwaiwgmifuc8XtO5dncPzdkAwjvCYRztrYs3CIOTKOcmLtvoZeU2DfOzZyhFzF9eyEaOIo4FGt8UVCyepCBENGb6JDs2Z2bOTgvKEMA1rhiwqXdtXflvd/Nr9iE3uAkauiVm6KpfUJgHMbd4C8MrKN8xk9tAVEUY0=
 # Slack Webhook Notification 
 notifications:
   slack:
-    secure:  vFHg5Bhfvl7uNDIKBkxJI9y8w0CdWJkyUGylVEdL27JhXB5+lUbU76AWEZ2Tj84rhUp71wS/d9FC8yz/64Nght9M+ni1RgvtYoeXWd3LE3rt4g4A5pMym043xSS9FPorHOrlp+nje91AAZ9vlDnlLP4zFqnM/VO67snnWilzShZ6lcFDW9a5yk7glOAVC1tWJS4H+HyRcB8YLEXvf1FZMMbu/u1Bhc+xJFif949tfLhE2ANFOPG9Qg9UAu9MnyZAzqp6AM66mZCzmVajXf6o159i0fwjbSdmkuGA9YqxEt16JZQDl2nCJw+7bG15PLzjZpWKiA+kLHbUsEbs1LLc6BEfKTme/zFb540ZPkIIgILwBENk4ieRTOziLal+jd4y1RoW6O5IYWxGMa7D8U23SjE8NyTJ/2VpoBHUFVd5Ylb1W7MykGTMW4eBhnLMVhT26DXqOJXlmWY5SSTQLpGdyYcnPm8780Jl68mtYEUGHwbMpfWOfDmvA/1FR5C1/fm27BngSJ0lm8FZ6hSm6T7bGdLXnpHU3537i63CwlWWiyucnupYX1vdbnyFXWwRjcjG3K8icHD2WvpW729ZsgVM8jXYpO+8/JDJAg1WQRjoP0tKuQ6iHMlflcMs+vqtHyCBINVx/uyUWj/Cum3P07bNWgzdpbCtyhoFM94GdwOGKwM=
+    secure: HWV8LJXqFNHWQt+KXYQ7u7l0ddf0LdkQflv0JMY+OQGqOXuCIg6afncnpWp9gZ+63CpmFT3gAidRiW+UrFDUUr99WKB4C8NCiqc3YMZHk1Aow/KICYioBBUvwO6TpCXc2Z0DPisrtzK7Gfc+qt/wMJgdYwe5KmKfLw7vBnr38MNT9/dswXB4JNLqhPMLi9xr89L1yRu8DSc0kGpzwjL2aff9NZvDILQmAqt2bUoWvDNjJklC7PTAebXOmEg+Ljkbc+fZLrBDnSdmPxcUBVIraemsQMWga8TGSUv3kpR2p/t7DhNzxrMu6bmmQSdVLOninAoe81r+WBxfZ65sopwkYauO+HAEUgjur5CmQG/2ZmEUik8DzeId+DRmCpe44L6feMsstnwayHCalfTRUk6Pwu1uKsvmMYAnVPEDXXf+eAQdtCWasQZtTHkxy7rTe9VxFWaHSCqNNbFN1XyTJsIQNuWhX90kEBY3ozF1KpqV6H2FiGvXfszabDbN29a5G4cU269lkuE+eiyWEtB5Hse7f99NSPh7nV6AWzjuV4/uFMajtuXWVAaAQoPVEe6vvUim7HS9JfriADVFn0ZU9uA6//ylDP3Wa9w/6Gs1ysUuiAXy4ljpUBWarcUyzfdkQebd0tkmMH/fpWDNpBuPDYedtKYYgSIaFhDAsvdXdlv36sw=
