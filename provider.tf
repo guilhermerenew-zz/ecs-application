@@ -1,5 +1,5 @@
 # Cloud Provider Access
 provider "aws" {
-  profile = "pessoal-profile"
+  profile = "default"
   region  = "us-west-2"
 }
