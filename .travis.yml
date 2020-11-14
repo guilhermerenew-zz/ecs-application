@@ -11,15 +11,14 @@ after_success:
   - docker --version
 # Depois de validação de versão, é instalado o pacote aws-cli
   - pip install --user awscli
-  - pip list
 # Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
-  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE --region us-west-2
+  - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE 
   - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
-  - docker build -t guilhermerenew/python-app .
+  - docker build -t guilhermerenew/python-app:20201114 .
   - docker tag guilhermerenew/python-app:20201114 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:20201114
   - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:20201114
 # Lista de imagens ativas em repositório!
-  - aws ecr describe-images --repository-name guilhermerenew/python-app --region us-west-2
+  - aws ecr describe-images --repository-name guilhermerenew/python-app 
 # Variaveis de Ambiente AWS encriptografadas!
 env:
   global:
