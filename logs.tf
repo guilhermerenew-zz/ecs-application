@@ -1,5 +1,4 @@
-# logs.tf
-# Configuracao de Metricas no cloud CLoudWatch, onde é definido um nome para o grupo de monitoracao: app-log-group, e é atribuido uma regra de retencao dos logs para 30 dias!  
+# Set up CloudWatch group and log stream and retain logs for 30 days
 resource "aws_cloudwatch_log_group" "app_log_group" {
   name              = "/ecs/py-app"
   retention_in_days = 30
