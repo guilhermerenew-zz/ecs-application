@@ -14,9 +14,9 @@ after_success:
 # Comandos ECR para autenticação em repositório, processo de tag, build e push realizados realizados do modo padrão.
   - aws ecr create-repository --repository-name guilhermerenew/python-app --image-tag-mutability IMMUTABLE 
   - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 417311404467.dkr.ecr.us-west-2.amazonaws.com
-  - docker build -t guilhermerenew/python-app:lts .
-  - docker tag guilhermerenew/python-app:lts 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:lts
-  - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:lts
+  - docker build -t guilhermerenew/python-app:flask-app .
+  - docker tag guilhermerenew/python-app:flask-app 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:l
+  - docker push 417311404467.dkr.ecr.us-west-2.amazonaws.com/guilhermerenew/python-app:flask-app
 # Lista de imagens ativas em repositório!
   - aws ecr describe-images --repository-name guilhermerenew/python-app 
 # Variaveis de Ambiente AWS encriptografadas!
