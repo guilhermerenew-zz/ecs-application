@@ -1,5 +1,5 @@
 # Apresentação
-[![Build Status](https://travis-ci.com/guilhermerenew/application-devops.svg?branch=master)](https://travis-ci.com/guilhermerenew/application-devops)
+[![Build Status](https://travis-ci.com/guilhermerenew/ecs-application.svg?branch=master)](https://travis-ci.com/guilhermerenew/ecs-application)
 > Sinta-se à vontade para criar em cima do problema abaixo. Caso algo não esteja claro, pode assumir o que seja mais claro para você e indique suas suposições em documentação. A especificação é bem básica e, portanto, caso deseje evoluir a ideia seguindo essa base, fique à vontade: por exemplo, utilizar composição de containers, usar ferramentas para facilitar a geração da imagem do container, etc.
 
 ## Sobre
@@ -109,7 +109,7 @@ TravisCI traz informacoes muito mais conclusivas sobre a saude dos commits reali
 
 1. As Credenciais fornecidas em arquivos em CI são volateis e ja se encontram redefinidas, servindo apenas como referencia e exemplo a serem realizados tanto em configuracoes de infra como as de notificacoes;
 2. Não é de boa pratica a inserircão de credenciais do provider utilizado direto em código, utilize o arquivo de variaveis de ambiente para carregar suas credenciais;
-3. O Travis mapeia não só informacaões basicas dos commits realizados mais tambem métricas de tempo de execucao do seu pipeline e a saude do código em branch master.
+3. O Travis mapeia não só informacaões basicas dos commits realizados mais tambem métricas de tempo de execucao do seu pipeline e a saude do código em branch master. [![Build Status](https://travis-ci.com/guilhermerenew/ecs-application.svg?branch=master)](https://travis-ci.com/guilhermerenew/ecs-application)
 
 ![picture](./imagens/integration-ci.png)
 
